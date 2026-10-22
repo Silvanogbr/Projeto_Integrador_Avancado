@@ -1,0 +1,348 @@
+{
+  "model": "random_forest_tuned",
+  "features": [
+    "id_equipamento",
+    "modo_operacao",
+    "temperatura_mancal_c",
+    "vibracao_rms_mms",
+    "pressao_oleo_bar",
+    "rotacao_rpm",
+    "emissao_acustica_db",
+    "corrente_eletrica_amp",
+    "vibracao_rms_mms_rolling_mean_1h",
+    "vibracao_rms_mms_rolling_std_1h",
+    "vibracao_rms_mms_rolling_mean_6h",
+    "vibracao_rms_mms_rolling_std_6h",
+    "temperatura_mancal_c_rolling_mean_1h",
+    "temperatura_mancal_c_rolling_std_1h",
+    "temperatura_mancal_c_rolling_mean_6h",
+    "temperatura_mancal_c_rolling_std_6h",
+    "severidade_dinamica",
+    "hora_dia",
+    "dia_semana"
+  ],
+  "target_names": [
+    "Normal",
+    "Desgaste_Rolamento",
+    "Desbalanceamento_Rotor",
+    "Cavitacao_Superaquecimento"
+  ],
+  "metrics": {
+    "random_forest_tuned": {
+      "accuracy": 0.9930555555555556,
+      "precision_macro": 0.9864625050358121,
+      "precision_weighted": 0.9930538716579164,
+      "recall_macro": 0.9647161028040508,
+      "recall_weighted": 0.9930555555555556,
+      "f1_macro": 0.9750252878367541,
+      "f1_weighted": 0.9929340951596964,
+      "confusion_matrix": [
+        [
+          3158,
+          0,
+          0,
+          1
+        ],
+        [
+          13,
+          165,
+          5,
+          0
+        ],
+        [
+          4,
+          1,
+          146,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          106
+        ]
+      ],
+      "classification_report": {
+        "Normal": {
+          "precision": 0.9943324937027708,
+          "recall": 0.9996834441278886,
+          "f1-score": 0.9970007892659827,
+          "support": 3159.0
+        },
+        "Desgaste_Rolamento": {
+          "precision": 0.9939759036144579,
+          "recall": 0.9016393442622951,
+          "f1-score": 0.9455587392550143,
+          "support": 183.0
+        },
+        "Desbalanceamento_Rotor": {
+          "precision": 0.9668874172185431,
+          "recall": 0.9668874172185431,
+          "f1-score": 0.9668874172185431,
+          "support": 151.0
+        },
+        "Cavitacao_Superaquecimento": {
+          "precision": 0.9906542056074766,
+          "recall": 0.9906542056074766,
+          "f1-score": 0.9906542056074766,
+          "support": 107.0
+        },
+        "accuracy": 0.9930555555555556,
+        "macro avg": {
+          "precision": 0.9864625050358121,
+          "recall": 0.9647161028040508,
+          "f1-score": 0.9750252878367541,
+          "support": 3600.0
+        },
+        "weighted avg": {
+          "precision": 0.9930538716579164,
+          "recall": 0.9930555555555556,
+          "f1-score": 0.9929340951596964,
+          "support": 3600.0
+        }
+      },
+      "best_params": {
+        "model__n_estimators": 350,
+        "model__min_samples_leaf": 1,
+        "model__max_depth": null,
+        "model__class_weight": {
+          "0": 1,
+          "1": 2,
+          "2": 2,
+          "3": 2
+        }
+      },
+      "cv_recall_macro": 0.9878813671336969
+    },
+    "extra_trees_tuned": {
+      "accuracy": 0.9922222222222222,
+      "precision_macro": 0.9900969076098882,
+      "precision_weighted": 0.9921924995065177,
+      "recall_macro": 0.9568110862976713,
+      "recall_weighted": 0.9922222222222222,
+      "f1_macro": 0.972863724564483,
+      "f1_weighted": 0.9920822579717491,
+      "confusion_matrix": [
+        [
+          3159,
+          0,
+          0,
+          0
+        ],
+        [
+          15,
+          165,
+          3,
+          0
+        ],
+        [
+          5,
+          2,
+          144,
+          0
+        ],
+        [
+          3,
+          0,
+          0,
+          104
+        ]
+      ],
+      "classification_report": {
+        "Normal": {
+          "precision": 0.992771841609051,
+          "recall": 1.0,
+          "f1-score": 0.9963728118593281,
+          "support": 3159.0
+        },
+        "Desgaste_Rolamento": {
+          "precision": 0.9880239520958084,
+          "recall": 0.9016393442622951,
+          "f1-score": 0.9428571428571428,
+          "support": 183.0
+        },
+        "Desbalanceamento_Rotor": {
+          "precision": 0.9795918367346939,
+          "recall": 0.9536423841059603,
+          "f1-score": 0.9664429530201343,
+          "support": 151.0
+        },
+        "Cavitacao_Superaquecimento": {
+          "precision": 1.0,
+          "recall": 0.9719626168224299,
+          "f1-score": 0.985781990521327,
+          "support": 107.0
+        },
+        "accuracy": 0.9922222222222222,
+        "macro avg": {
+          "precision": 0.9900969076098882,
+          "recall": 0.9568110862976713,
+          "f1-score": 0.972863724564483,
+          "support": 3600.0
+        },
+        "weighted avg": {
+          "precision": 0.9921924995065177,
+          "recall": 0.9922222222222222,
+          "f1-score": 0.9920822579717491,
+          "support": 3600.0
+        }
+      },
+      "best_params": {
+        "model__n_estimators": 250,
+        "model__min_samples_leaf": 1,
+        "model__max_depth": 28,
+        "model__class_weight": "balanced"
+      },
+      "cv_recall_macro": 0.9794847889593999
+    }
+  },
+  "data_audit": {
+    "rows": 12000,
+    "columns": [
+      "timestamp",
+      "id_equipamento",
+      "modo_operacao",
+      "horas_operacao_acumuladas",
+      "temperatura_mancal_c",
+      "vibracao_rms_mms",
+      "pressao_oleo_bar",
+      "rotacao_rpm",
+      "emissao_acustica_db",
+      "corrente_eletrica_amp",
+      "tipo_falha"
+    ],
+    "missing_count": {
+      "timestamp": 0,
+      "id_equipamento": 0,
+      "modo_operacao": 0,
+      "horas_operacao_acumuladas": 0,
+      "temperatura_mancal_c": 409,
+      "vibracao_rms_mms": 352,
+      "pressao_oleo_bar": 328,
+      "rotacao_rpm": 0,
+      "emissao_acustica_db": 484,
+      "corrente_eletrica_amp": 0,
+      "tipo_falha": 0
+    },
+    "missing_rate": {
+      "timestamp": 0.0,
+      "id_equipamento": 0.0,
+      "modo_operacao": 0.0,
+      "horas_operacao_acumuladas": 0.0,
+      "temperatura_mancal_c": 0.034083333333333334,
+      "vibracao_rms_mms": 0.029333333333333333,
+      "pressao_oleo_bar": 0.027333333333333334,
+      "rotacao_rpm": 0.0,
+      "emissao_acustica_db": 0.04033333333333333,
+      "corrente_eletrica_amp": 0.0,
+      "tipo_falha": 0.0
+    },
+    "global_interval_minutes": {
+      "count": 11999.0,
+      "mean": 10.0,
+      "std": 0.0,
+      "min": 10.0,
+      "25%": 10.0,
+      "50%": 10.0,
+      "75%": 10.0,
+      "max": 10.0
+    },
+    "equipment_interval_minutes": {
+      "TURB-101": {
+        "count": 3042.0,
+        "mean": 39.43458251150559,
+        "std": 34.288116549435294,
+        "min": 10.0,
+        "25%": 10.0,
+        "50%": 30.0,
+        "75%": 50.0,
+        "max": 260.0
+      },
+      "TURB-102": {
+        "count": 3020.0,
+        "mean": 39.69205298013245,
+        "std": 34.22648107892314,
+        "min": 10.0,
+        "25%": 10.0,
+        "50%": 30.0,
+        "75%": 50.0,
+        "max": 330.0
+      },
+      "TURB-103": {
+        "count": 2964.0,
+        "mean": 40.48245614035088,
+        "std": 35.94822319908,
+        "min": 10.0,
+        "25%": 20.0,
+        "50%": 30.0,
+        "75%": 50.0,
+        "max": 310.0
+      },
+      "TURB-104": {
+        "count": 2970.0,
+        "mean": 40.38047138047138,
+        "std": 34.33666294417905,
+        "min": 10.0,
+        "25%": 20.0,
+        "50%": 30.0,
+        "75%": 50.0,
+        "max": 270.0
+      }
+    },
+    "equipment_missing_rate": {
+      "TURB-101": {
+        "temperatura_mancal_c": 0.027932960893854747,
+        "vibracao_rms_mms": 0.029904699309891553,
+        "pressao_oleo_bar": 0.027604337824515282,
+        "rotacao_rpm": 0.0,
+        "emissao_acustica_db": 0.04009201445941505,
+        "corrente_eletrica_amp": 0.0
+      },
+      "TURB-102": {
+        "temperatura_mancal_c": 0.03508771929824561,
+        "vibracao_rms_mms": 0.027474346242965905,
+        "pressao_oleo_bar": 0.026481297583581597,
+        "rotacao_rpm": 0.0,
+        "emissao_acustica_db": 0.044356173452499176,
+        "corrente_eletrica_amp": 0.0
+      },
+      "TURB-103": {
+        "temperatura_mancal_c": 0.03777403035413154,
+        "vibracao_rms_mms": 0.03204047217537943,
+        "pressao_oleo_bar": 0.02866779089376054,
+        "rotacao_rpm": 0.0,
+        "emissao_acustica_db": 0.04047217537942664,
+        "corrente_eletrica_amp": 0.0
+      },
+      "TURB-104": {
+        "temperatura_mancal_c": 0.035678222820599126,
+        "vibracao_rms_mms": 0.0279367216425446,
+        "pressao_oleo_bar": 0.026590373611578594,
+        "rotacao_rpm": 0.0,
+        "emissao_acustica_db": 0.03635139683608213,
+        "corrente_eletrica_amp": 0.0
+      }
+    },
+    "equipment": [
+      "TURB-101",
+      "TURB-102",
+      "TURB-103",
+      "TURB-104"
+    ],
+    "target_counts": {
+      "0": 10560,
+      "1": 600,
+      "2": 480,
+      "3": 360
+    },
+    "invalid_extremes_replaced": 239,
+    "split": {
+      "train_rows": 8400,
+      "test_rows": 3600,
+      "train_end": "2026-02-28 07:50:00",
+      "test_start": "2026-02-28 08:00:00"
+    }
+  },
+  "anomaly_train_rows": 7401,
+  "note": "Operational validation only; labels and acquisition provenance are assumed accurate."
+}
