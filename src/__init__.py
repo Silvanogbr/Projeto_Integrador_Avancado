@@ -1,1 +1,1 @@
-"""AeroMotion Dynamics industrial analytics project."""
+"""Projeto AeroMotion: analise e previsao de falhas."""

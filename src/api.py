@@ -1,87 +1,104 @@
-"""FastAPI inference service; run after training src.pipeline."""
-from __future__ import annotations
-import os
-from collections import defaultdict, deque
-from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import List
+import tempfile
+import uuid
+
+import cv2
 import joblib
 import numpy as np
 import pandas as pd
-from fastapi import FastAPI, HTTPException
-from starlette.concurrency import run_in_threadpool
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+try:
+    from .data_utils import FEATURES
+    from .visao_computacional import analisar_imagem
+except ImportError:
+    from data_utils import FEATURES
+    from visao_computacional import analisar_imagem
 
-MODEL_PATH = Path(os.getenv("MODEL_PATH", "artifacts/model.joblib"))
-MODEL_VERSION = os.getenv("MODEL_VERSION", "1.0.0")
-app = FastAPI(title="AeroMotion Predictive Maintenance API", version=MODEL_VERSION)
-model = joblib.load(MODEL_PATH) if MODEL_PATH.exists() else None
-history = defaultdict(lambda: deque(maxlen=200))
+BASE = Path(__file__).resolve().parents[1]
+PASTA_SITE = Path(__file__).resolve().parent / "static"
+PASTA_RESULTADOS = BASE / "imagens" / "resultados_web"
+PASTA_RESULTADOS.mkdir(parents=True, exist_ok=True)
 
-def _naive_utc(ts: datetime) -> datetime:
-    return ts.astimezone(timezone.utc).replace(tzinfo=None) if ts.tzinfo is not None else ts
+app = FastAPI(title="AeroMotion - API de previsao", version="1.0")
+app.mount("/static", StaticFiles(directory=PASTA_SITE), name="static")
+app.mount("/resultados", StaticFiles(directory=PASTA_RESULTADOS), name="resultados")
+modelo = joblib.load(BASE / "modelos" / "modelo_classificacao.joblib")
+versao = "1.0"
 
-class Reading(BaseModel):
-    timestamp: datetime
-    id_equipamento: str = Field(pattern=r"^TURB-10[1-4]$")
-    modo_operacao: str = Field(pattern=r"^(Cruzeiro|Carga_Media|Carga_Alta)$")
-    horas_operacao_acumuladas: float = Field(ge=0)
-    temperatura_mancal_c: float | None = Field(default=None, ge=20, le=180)
-    vibracao_rms_mms: float | None = Field(default=None, ge=0, le=20)
-    pressao_oleo_bar: float | None = Field(default=None, ge=0, le=8)
-    rotacao_rpm: float | None = Field(default=None, gt=0, le=4000)
-    emissao_acustica_db: float | None = Field(default=None, ge=20, le=100)
-    corrente_eletrica_amp: float | None = Field(default=None, ge=0, le=50)
+class Leitura(BaseModel):
+    temperatura_mancal_c: float = Field(ge=-50, le=200)
+    vibracao_rms_mms: float = Field(ge=0, le=100)
+    pressao_oleo_bar: float = Field(ge=0, le=20)
+    rotacao_rpm: float = Field(gt=0, le=10000)
+    emissao_acustica_db: float = Field(ge=0, le=150)
+    corrente_eletrica_amp: float = Field(ge=0, le=200)
+    vibracao_media_1h: float
+    vibracao_desvio_1h: float
+    temperatura_media_1h: float
+    temperatura_desvio_1h: float
+    vibracao_media_6h: float
+    vibracao_desvio_6h: float
+    temperatura_media_6h: float
+    temperatura_desvio_6h: float
 
-def _features(reading: Reading) -> pd.DataFrame:
-    d = reading.model_dump(); ts = d.pop("timestamp")
-    ts = _naive_utc(ts)
-    records = history[reading.id_equipamento]
-    if records and ts <= records[-1][0]:
-        raise ValueError("Timestamp must be later than the last reading for this equipment")
-    for sensor in ["temperatura_mancal_c", "vibracao_rms_mms"]:
-        for win in ["1h", "6h"]:
-            period = timedelta(hours=int(win[:-1]))
-            past = [item for item in records if timedelta(0) < ts-item[0] <= period]
-            position = 1 if sensor == "temperatura_mancal_c" else 2
-            values = [item[position] for item in past if item[position] is not None]
-            d[f"{sensor}_rolling_mean_{win}"] = float(np.mean(values)) if values else np.nan
-            d[f"{sensor}_rolling_std_{win}"] = float(np.std(values, ddof=1)) if len(values) >= 2 else np.nan
-    d["severidade_dinamica"] = (d["vibracao_rms_mms"] / d["rotacao_rpm"]
-                                  if d["vibracao_rms_mms"] is not None and d["rotacao_rpm"] is not None else np.nan)
-    d["hora_dia"] = ts.hour + ts.minute/60
-    d["dia_semana"] = ts.weekday()
-    records.append((ts, d["temperatura_mancal_c"], d["vibracao_rms_mms"]))
-    return pd.DataFrame([d])
+class Lote(BaseModel):
+    leituras: List[Leitura]
+
+def prever(leitura):
+    dados = leitura.model_dump()
+    dados["severidade_dinamica"] = dados["vibracao_rms_mms"] / dados["rotacao_rpm"]
+    entrada = pd.DataFrame([dados], columns=FEATURES)
+    return {"classe_prevista": int(modelo.predict(entrada)[0])}
+
+@app.get("/", include_in_schema=False)
+def pagina_inicial():
+    return FileResponse(PASTA_SITE / "index.html")
+
 
 @app.get("/health")
-async def health():
-    return {"status": "ok" if model is not None else "model_not_loaded", "model_version": MODEL_VERSION}
+def health():
+    return {"status": "ok", "versao_modelo": versao}
 
 @app.post("/predict")
-async def predict(reading: Reading):
-    if model is None: raise HTTPException(status_code=503, detail="Model not loaded; train first")
-    try: x = _features(reading)
-    except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc)) from exc
-    pred, scores = await run_in_threadpool(_infer_one, x)
-    return {"tipo_falha": pred, "classe": ["Normal","Desgaste_Rolamento","Desbalanceamento_Rotor","Cavitacao_Superaquecimento"][pred], "probabilidades": scores, "model_version": MODEL_VERSION}
+def predict(leitura: Leitura):
+    return prever(leitura)
 
 @app.post("/predict-batch")
-async def predict_batch(readings: List[Reading]):
-    if not readings: raise HTTPException(status_code=422, detail="Batch cannot be empty")
-    if len(readings) > 1000: raise HTTPException(status_code=413, detail="Maximum batch size is 1000")
-    if model is None: raise HTTPException(status_code=503, detail="Model not loaded; train first")
-    for equipment in {r.id_equipamento for r in readings}:
-        times = [_naive_utc(r.timestamp) for r in readings if r.id_equipamento == equipment]
-        last = history[equipment][-1][0] if history[equipment] else None
-        if any(a >= b for a, b in zip(times, times[1:])) or (last is not None and times[0] <= last):
-            raise HTTPException(status_code=422, detail="Batch timestamps must be unique, ascending, and later than prior readings per equipment")
-    try: xs = pd.concat([_features(r) for r in readings], ignore_index=True)
-    except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc)) from exc
-    preds = await run_in_threadpool(lambda: model.predict(xs).astype(int).tolist())
-    return {"predictions": preds, "model_version": MODEL_VERSION}
+def predict_batch(lote: Lote):
+    return {"resultados": [prever(leitura) for leitura in lote.leituras]}
 
-def _infer_one(x: pd.DataFrame) -> tuple[int, list[float]]:
-    pred = int(model.predict(x)[0])
-    scores = model.predict_proba(x)[0].tolist() if hasattr(model, "predict_proba") else []
-    return pred, scores
+
+@app.post("/vision/inspect")
+async def inspecionar_imagem(arquivo: UploadFile = File(...)):
+    """Recebe uma imagem, executa a analise OpenCV e devolve as imagens."""
+    tipos_permitidos = {"image/jpeg", "image/png", "image/webp"}
+    if arquivo.content_type not in tipos_permitidos:
+        raise HTTPException(status_code=415, detail="Envie uma imagem JPG, PNG ou WEBP.")
+
+    conteudo = await arquivo.read(10 * 1024 * 1024 + 1)
+    if len(conteudo) > 10 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="A imagem deve ter no maximo 10 MB.")
+
+    imagem = cv2.imdecode(np.frombuffer(conteudo, dtype=np.uint8), cv2.IMREAD_COLOR)
+    if imagem is None:
+        raise HTTPException(status_code=400, detail="Nao foi possivel ler essa imagem.")
+
+    identificador = uuid.uuid4().hex
+    pasta_saida = PASTA_RESULTADOS / identificador
+    pasta_saida.mkdir(parents=True, exist_ok=True)
+
+    # O script de visao ja trabalha com caminhos; usamos um arquivo temporario.
+    with tempfile.TemporaryDirectory() as pasta_temporaria:
+        caminho_temporario = Path(pasta_temporaria) / "imagem.jpg"
+        cv2.imwrite(str(caminho_temporario), imagem)
+        resultado = analisar_imagem(caminho_temporario, pasta_saida)
+
+    resultado["imagens"] = {
+        nome: f"/resultados/{identificador}/{nome}"
+        for nome in ["bordas.jpg", "bordas_contornos.jpg", "mascara_hotspots.jpg", "hotspots_destacados.jpg"]
+    }
+    return resultado

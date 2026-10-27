@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1728">
+  <title>AeroMotion | Painel de inspeção</title>
+  <style>
+    :root{font-family:Inter,Segoe UI,Arial,sans-serif;color:#e8eef8;background:#0b1220;font-synthesis:none;--panel:#111c2e;--line:#26364c;--muted:#9aabc2;--blue:#5aa7ff;--green:#55d6a1;--red:#ff7474}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 85% -10%,#1b3656 0,transparent 38%),#0b1220}
+    a{color:#8ec5ff}header{border-bottom:1px solid var(--line);background:#0b1220d9;position:sticky;top:0;z-index:2;backdrop-filter:blur(12px)}
+    .bar{max-width:1160px;margin:auto;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{display:flex;align-items:center;gap:12px;font-weight:750;letter-spacing:.2px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#5aa7ff,#2466c7);display:grid;place-items:center;font-size:20px}.sub{font-size:12px;color:var(--muted);font-weight:400;margin-top:3px}.links{display:flex;gap:16px;font-size:13px}
+    main{max-width:1160px;margin:auto;padding:32px 24px 60px}.intro{margin-bottom:24px}.eyebrow{color:#83bcff;text-transform:uppercase;letter-spacing:1.4px;font-size:11px;font-weight:700}h1{font-size:30px;margin:8px 0}h2{font-size:18px;margin:0 0 6px}.intro p,.hint{color:var(--muted);line-height:1.55;font-size:14px;margin:6px 0}.status{display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:9px 14px;font-size:13px;color:var(--muted);white-space:nowrap}.dot{width:9px;height:9px;border-radius:50%;background:#77869a}.dot.on{background:var(--green);box-shadow:0 0 12px #55d6a177}.dot.off{background:var(--red)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:#111c2eeF;border:1px solid var(--line);border-radius:16px;padding:21px;box-shadow:0 12px 34px #0002}.cardhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:18px}.tag{font-size:11px;color:#a8cfff;background:#173153;border:1px solid #294e77;border-radius:99px;padding:5px 9px;white-space:nowrap}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-size:12px;color:#b7c5d8;margin-bottom:6px}.field input{width:100%;border:1px solid #30435d;background:#0b1423;color:#edf4ff;border-radius:8px;padding:10px 11px;font:inherit;font-size:14px;outline:none}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #5aa7ff20}.section-label{grid-column:1/-1;color:#86bfff;font-size:12px;font-weight:700;margin:5px 0 -3px}.actions{margin-top:17px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}button{border:0;border-radius:8px;background:#347fe0;color:white;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer}button:hover{background:#4b94f0}button:disabled{opacity:.55;cursor:wait}.result{margin-top:15px;border:1px solid var(--line);background:#0b1423;border-radius:10px;padding:14px;color:#dbe8f8;min-height:50px;line-height:1.5;font-size:14px}.result strong{color:#fff}.hidden{display:none!important}.upload{border:1px dashed #405675;border-radius:12px;padding:20px;text-align:center;background:#0c1626}.upload input{max-width:100%;color:var(--muted)}.preview{max-width:100%;max-height:250px;border-radius:9px;margin-top:14px}.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.tile{background:#0b1423;border:1px solid var(--line);border-radius:10px;padding:9px}.tile img{width:100%;height:150px;object-fit:contain;background:#080d16;border-radius:6px}.tile span{display:block;color:var(--muted);font-size:12px;margin:7px 2px 0}.wide{grid-column:1/-1}.notice{font-size:12px;color:#d9bd76;margin-top:12px;line-height:1.5}.foot{color:#7789a1;font-size:12px;text-align:center;margin-top:24px}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}}@media(max-width:520px){.bar{padding:13px 16px}.links{gap:9px}main{padding:25px 15px 45px}h1{font-size:25px}.fields{grid-template-columns:1fr 1fr}.card{padding:16px}.status{font-size:11px;padding:8px 10px}}
+  </style>
+</head>
+<body>
+<header><div class="bar"><div class="brand"><div class="logo">✦</div><div>AeroMotion<div class="sub">Painel de monitoramento industrial</div></div></div><nav class="links"><a href="/docs" target="_blank">Documentação API</a><a href="/health" target="_blank">Health</a></nav></div></header>
+<main>
+  <section class="intro"><div class="eyebrow">AeroMotion Dynamics · bancada de testes</div><div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap"><div><h1>Inspeção e previsão</h1><p>Envie uma leitura de sensores para consultar o modelo ou uma imagem para a análise visual.</p></div><div class="status"><i id="dot" class="dot"></i><span id="healthText">Conectando à API...</span></div></div></section>
+  <div class="grid">
+    <section class="card">
+      <div class="cardhead"><div><h2>Previsão dos sensores</h2><p class="hint">Informe os valores atuais e as estatísticas móveis da bancada.</p></div><span class="tag">POST /predict</span></div>
+      <form id="sensorForm"><div class="fields">
+        <div class="section-label">Leitura atual</div>
+        <div class="field"><label for="temperatura_mancal_c">Temperatura do mancal (°C)</label><input id="temperatura_mancal_c" name="temperatura_mancal_c" type="number" step="any" value="65" required></div>
+        <div class="field"><label for="vibracao_rms_mms">Vibração RMS (mm/s)</label><input id="vibracao_rms_mms" name="vibracao_rms_mms" type="number" step="any" value="2" required></div>
+        <div class="field"><label for="pressao_oleo_bar">Pressão do óleo (bar)</label><input id="pressao_oleo_bar" name="pressao_oleo_bar" type="number" step="any" value="4.3" required></div>
+        <div class="field"><label for="rotacao_rpm">Rotação (RPM)</label><input id="rotacao_rpm" name="rotacao_rpm" type="number" step="any" value="3000" required></div>
+        <div class="field"><label for="emissao_acustica_db">Emissão acústica (dB)</label><input id="emissao_acustica_db" name="emissao_acustica_db" type="number" step="any" value="55" required></div>
+        <div class="field"><label for="corrente_eletrica_amp">Corrente elétrica (A)</label><input id="corrente_eletrica_amp" name="corrente_eletrica_amp" type="number" step="any" value="30" required></div>
+        <div class="section-label">Médias e desvios móveis</div>
+        <div class="field"><label for="vibracao_media_1h">Vibração média · 1h</label><input id="vibracao_media_1h" name="vibracao_media_1h" type="number" step="any" value="2" required></div>
+        <div class="field"><label for="vibracao_desvio_1h">Vibração desvio · 1h</label><input id="vibracao_desvio_1h" name="vibracao_desvio_1h" type="number" step="any" value="0.2" required></div>
+        <div class="field"><label for="temperatura_media_1h">Temperatura média · 1h</label><input id="temperatura_media_1h" name="temperatura_media_1h" type="number" step="any" value="65" required></div>
+        <div class="field"><label for="temperatura_desvio_1h">Temperatura desvio · 1h</label><input id="temperatura_desvio_1h" name="temperatura_desvio_1h" type="number" step="any" value="1" required></div>
+        <div class="field"><label for="vibracao_media_6h">Vibração média · 6h</label><input id="vibracao_media_6h" name="vibracao_media_6h" type="number" step="any" value="2" required></div>
+        <div class="field"><label for="vibracao_desvio_6h">Vibração desvio · 6h</label><input id="vibracao_desvio_6h" name="vibracao_desvio_6h" type="number" step="any" value="0.2" required></div>
+        <div class="field"><label for="temperatura_media_6h">Temperatura média · 6h</label><input id="temperatura_media_6h" name="temperatura_media_6h" type="number" step="any" value="65" required></div>
+        <div class="field"><label for="temperatura_desvio_6h">Temperatura desvio · 6h</label><input id="temperatura_desvio_6h" name="temperatura_desvio_6h" type="number" step="any" value="1" required></div>
+      </div><div class="actions"><button id="predictButton" type="submit">Analisar leitura</button><span class="hint">Classe 0 a 3</span></div></form>
+      <div id="prediction" class="result" aria-live="polite">Preencha ou ajuste os valores e clique em analisar.</div>
+    </section>
+    <section class="card">
+      <div class="cardhead"><div><h2>Inspeção por imagem</h2><p class="hint">Canny, contornos e máscara de possíveis regiões quentes.</p></div><span class="tag">OpenCV</span></div>
+      <form id="visionForm"><div class="upload"><input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp" required><div class="hint">Formatos JPG, PNG ou WEBP · máximo 10 MB</div><img id="imagePreview" class="preview hidden" alt="Prévia da imagem enviada"></div><div class="actions"><button id="visionButton" type="submit">Analisar imagem</button><span class="hint">POST /vision/inspect</span></div></form>
+      <div id="visionResult" class="result" aria-live="polite">Selecione uma imagem da peça ou do componente.</div><div id="visionWarning" class="notice hidden"></div><div id="visionImages" class="tiles hidden"></div>
+    </section>
+  </div>
+  <p class="foot">As marcações visuais dependem da imagem enviada. Hotspots por cor não representam medição real de temperatura.</p>
+</main>
+<script>
+const healthText = document.getElementById('healthText');
+const dot = document.getElementById('dot');
+const classes = {0:'Normal',1:'Desgaste de rolamento',2:'Desbalanceamento do rotor',3:'Cavitação / superaquecimento'};
+async function checkHealth(){try{const r=await fetch('/health');if(!r.ok)throw new Error();const d=await r.json();healthText.textContent=`API online · modelo ${d.versao_modelo}`;dot.className='dot on'}catch{healthText.textContent='API indisponível · inicie o Uvicorn';dot.className='dot off'}}
+checkHealth();
+const form=document.getElementById('sensorForm');
+form.addEventListener('submit',async e=>{e.preventDefault();const b=document.getElementById('predictButton'),out=document.getElementById('prediction');b.disabled=true;out.textContent='Consultando o modelo...';const data=Object.fromEntries(new FormData(form).entries());for(const k in data)data[k]=Number(data[k]);try{const r=await fetch('/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const d=await r.json();if(!r.ok)throw new Error(d.detail||'Não foi possível fazer a previsão.');const c=d.classe_prevista;out.innerHTML=`<strong>Classe prevista: ${c} · ${classes[c]||'Classe desconhecida'}</strong><br><span class="hint">Previsão gerada pelo modelo de classificação.</span>`}catch(err){out.textContent=`Erro: ${err.message}. Confira se a API está iniciada.`}finally{b.disabled=false}});
+const fileInput=document.getElementById('imageFile'),preview=document.getElementById('imagePreview');
+fileInput.addEventListener('change',()=>{const f=fileInput.files[0];if(f){preview.src=URL.createObjectURL(f);preview.classList.remove('hidden')}});
+document.getElementById('visionForm').addEventListener('submit',async e=>{e.preventDefault();const f=fileInput.files[0];if(!f)return;const b=document.getElementById('visionButton'),out=document.getElementById('visionResult'),tiles=document.getElementById('visionImages'),warning=document.getElementById('visionWarning');b.disabled=true;out.textContent='Analisando a imagem...';tiles.classList.add('hidden');warning.classList.add('hidden');const data=new FormData();data.append('arquivo',f);try{const r=await fetch('/vision/inspect',{method:'POST',body:data});const d=await r.json();if(!r.ok)throw new Error(d.detail||'Falha na análise visual.');out.innerHTML=`<strong>${d.quantidade_contornos} contornos encontrados</strong><br>${Number(d.pixels_hotspot).toLocaleString('pt-BR')} pixels marcados como possível hotspot.`;warning.textContent=d.aviso;warning.classList.remove('hidden');const labels={'bordas.jpg':'Bordas Canny','bordas_contornos.jpg':'Contornos','mascara_hotspots.jpg':'Máscara HSV','hotspots_destacados.jpg':'Hotspots destacados'};tiles.innerHTML=Object.entries(d.imagens).map(([name,url])=>`<div class="tile"><img src="${url}" alt="${labels[name]}"><span>${labels[name]}</span></div>`).join('');tiles.classList.remove('hidden')}catch(err){out.textContent=`Erro: ${err.message}`}finally{b.disabled=false}});
+</script>
+</body>
+</html>

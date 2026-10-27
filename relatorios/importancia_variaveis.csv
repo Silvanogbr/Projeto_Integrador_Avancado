@@ -1,0 +1,16 @@
+variavel,importancia
+emissao_acustica_db,0.1751065998125598
+pressao_oleo_bar,0.14216357397936993
+severidade_dinamica,0.13871772831532542
+corrente_eletrica_amp,0.13276900446065448
+vibracao_rms_mms,0.12855792156733664
+temperatura_mancal_c,0.10796217961734332
+temperatura_media_1h,0.046614086963605965
+vibracao_media_1h,0.03262861396302791
+temperatura_desvio_1h,0.02111633753139705
+vibracao_desvio_1h,0.02032539961298462
+temperatura_desvio_6h,0.01854680265269311
+vibracao_desvio_6h,0.011144167993756204
+rotacao_rpm,0.010157576813927283
+temperatura_media_6h,0.008507587306719777
+vibracao_media_6h,0.005682419409298558

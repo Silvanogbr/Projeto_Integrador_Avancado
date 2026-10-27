@@ -1,6 +1,10 @@
--r requirements-api.txt
-opencv-python-headless==4.12.0.88
-matplotlib>=3.7,<4
-seaborn>=0.13,<1
-jupyter>=1.0,<2
-nbformat>=5.9,<6
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+joblib
+fastapi
+uvicorn
+opencv-python-headless
+python-multipart

@@ -1,34 +1,36 @@
-# Projeto Integrador Avançado - AeroMotion Dynamics
+# Projeto Integrador AeroMotion
 
-Pacote de análise industrial com notebook, relatório técnico, modelos, API e pipeline OpenCV.
+## O que foi feito
 
-## Entregáveis
+Esta é uma solução acadêmica simples para o enunciado do PDF. Ela inclui limpeza e análise dos sensores, classificação de falhas, detecção de anomalias, uma demonstração inicial de visão computacional, API e Docker.
 
-- `notebooks/aeromotion_analise.ipynb`: inspeção, saneamento, features temporais, EDA e avaliação dos modelos; notebook executado.
-- `output/pdf/relatorio_tecnico_aeromotion.pdf`: relatório técnico da Etapa 1.
-- `output/pdf/parecer_tecnico_etico_regulatorio.pdf`: parecer de quatro páginas da Etapa 3.
-- `artifacts/model.joblib`, `artifacts/isolation_forest.joblib`, `artifacts/metrics.json`: modelos exportados e métricas.
-- `src/pipeline.py`: tratamento e treino temporal.
-- `src/vision.py`: inspeção geométrica por Canny e segmentação térmica HSV.
-- `src/api.py`: FastAPI com `/predict`, `/predict-batch`, `/health` e `/docs`.
-- `Dockerfile`, `docker-compose.yml`, `requirements-api.txt`: implantação em container.
-- `docs/plano_mlops_12_meses.md`: plano de monitoramento e governança.
+## Estrutura
 
-## Reproduzir
+- `notebooks/atividade_aeromotion.ipynb`: notebook comentado em etapas.
+- `src/data_utils.py`: limpeza e criação de variáveis.
+- `src/treinar_modelos.py`: divisão temporal, comparação e exportação dos modelos.
+- `src/visao_computacional.py`: bordas, contornos e máscara HSV para regiões quentes.
+- `src/api.py`: API REST, página web e endpoints `/health`, `/predict`, `/predict-batch` e `/vision/inspect`.
+- `src/static/index.html`: site para previsão dos sensores e envio de imagens para o OpenCV.
+- `modelos/`: modelos `.joblib` gerados pelo treino.
+- `relatorios/`: métricas, comparação e matriz de confusão.
+- `relatorios/parecer_tecnico.pdf`: relatório técnico e parecer resumido.
 
-Requer Python 3.12. Instale dependências a partir da raiz do projeto:
+## Como executar
 
-```bash
-python -m pip install -r requirements-dev.txt
-python -m src.pipeline data/dados_sensores_aeromotion.csv --out artifacts
-python notebooks/build_notebook.py
-python scripts/build_reports.py
-python -m pytest -q
-uvicorn src.api:app --host 0.0.0.0 --port 8000
-```
+1. Instale Python 3.10 ou superior.
+2. Na pasta do projeto, execute `pip install -r requirements.txt`.
+3. Gere os modelos: `python src/treinar_modelos.py`.
+4. Inicie o servidor: `python -m uvicorn src.api:app --reload`.
+5. Abra `http://127.0.0.1:8000` para usar o site. A documentação fica em `http://127.0.0.1:8000/docs`.
+6. Para iniciar tudo com Docker, use `docker compose up --build` e acesse `http://127.0.0.1:8000`. Para parar o serviço, execute `docker compose down`.
+7. No site, envie a leitura dos sensores ou selecione uma imagem JPG, PNG ou WEBP para análise visual. O limite de imagem é 10 MB.
+8. A análise visual também pode ser executada pelo terminal: `python src/visao_computacional.py caminho/para/imagem.jpg`.
 
-Para iniciar o container após gerar os artefatos, use `docker compose up --build`.
+## Entradas para a API
 
-## Limites de validação
+A leitura inclui os seis sensores e os valores móveis de vibração e temperatura para janelas de 1h e 6h. A severidade dinâmica é calculada pela API. O retorno é o código da classe (0 a 3). O endpoint em lote recebe `{"leituras": [...]}`. O endpoint `/vision/inspect` recebe uma imagem no campo `arquivo` e devolve contornos, possíveis hotspots e os endereços das imagens geradas.
 
-O modelo usa um corte cronológico único do CSV fornecido: 70% treino e 30% teste. O melhor modelo foi selecionado apenas por validação temporal interna ao treino. O recall por classe de falha no bloco final ficou acima de 90%, próximo do limiar para desgaste de rolamento. Isso não comprova generalização para produção. O CSV não contém imagens, então o código OpenCV foi verificado com imagens sintéticas e ainda requer calibração e dados industriais rotulados. A API mantém janelas móveis de 1 h e 6 h em memória por processo, rejeita leituras fora de ordem e não persiste o histórico após reinício; produção deve compartilhar histórico entre réplicas.
+## Observações
+
+Os limites e a faixa HSV são pontos de partida didáticos. A validação de geometria e temperatura depende de imagens calibradas, imagens térmicas reais e medidas de referência. O conjunto é sintético/acadêmico; não se recomenda usar as previsões para comandar máquinas reais sem validação técnica, monitoramento e aprovação de especialistas.
