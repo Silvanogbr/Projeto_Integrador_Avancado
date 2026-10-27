@@ -14,7 +14,6 @@ BASE = Path(__file__).resolve().parents[1]
 MODELOS = BASE / "modelos"
 MODELOS.mkdir(exist_ok=True)
 
-
 def treinar():
     df = preparar_dados(BASE / "dados_sensores_aeromotion.csv")
     # Divisao em ordem temporal: primeiros 70% para treino, ultimos 30% para teste.

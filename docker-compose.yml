@@ -1,6 +1,14 @@
 services:
-  aeromotion-api:
+  aeromotion-web:
     build: .
+    command: ["uvicorn", "src.web:app", "--host", "0.0.0.0", "--port", "8000"]
     ports:
       - "8000:8000"
+    restart: unless-stopped
+
+  aeromotion-api:
+    build: .
+    command: ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8001"]
+    ports:
+      - "8001:8001"
     restart: unless-stopped

@@ -12,7 +12,6 @@ FEATURES = SENSORES + ["severidade_dinamica"] + [
     "temperatura_media_6h", "temperatura_desvio_6h",
 ]
 
-
 def preparar_dados(caminho_csv):
     """Le, limpa e cria indicadores temporais por equipamento."""
     df = pd.read_csv(caminho_csv)
@@ -44,7 +43,6 @@ def preparar_dados(caminho_csv):
                 df.loc[indices, f"{nome}_media_{sufixo}"] = medias.to_numpy()
                 df.loc[indices, f"{nome}_desvio_{sufixo}"] = desvios.to_numpy()
     return df.sort_values("timestamp").reset_index(drop=True)
-
 
 def resumo_inspecao(df):
     """Retorna dados basicos para a inspecao estrutural."""

@@ -89,6 +89,64 @@ def analisar_imagem(caminho, pasta_saida="imagens/resultado"):
         )
     }
 
+def comparar_com_gabarito(caminho_gabarito, caminho_analisado, pasta_saida,
+                          limite_diferenca_pct=8.0):
+    """Compara uma peca com uma imagem de referencia considerada boa.
+
+    A regra didatica marca como possivel problema quando mais de 8% dos pixels
+    apresentam diferenca visivel. As imagens devem ter enquadramento semelhante.
+    """
+    referencia = cv2.imread(str(caminho_gabarito))
+    analisada = cv2.imread(str(caminho_analisado))
+    if referencia is None or analisada is None:
+        raise ValueError("Nao foi possivel abrir uma das imagens enviadas.")
+
+    altura, largura = referencia.shape[:2]
+    analisada = cv2.resize(analisada, (largura, altura))
+
+    referencia_suave = cv2.GaussianBlur(referencia, (5, 5), 0)
+    analisada_suave = cv2.GaussianBlur(analisada, (5, 5), 0)
+    diferenca_canais = cv2.absdiff(referencia_suave, analisada_suave)
+    # Considera mudanca em qualquer canal para nao ignorar defeitos de cor.
+    diferenca = np.max(diferenca_canais, axis=2).astype(np.uint8)
+    _, mascara = cv2.threshold(diferenca, 30, 255, cv2.THRESH_BINARY)
+
+    percentual = (cv2.countNonZero(mascara) / mascara.size) * 100
+    tem_problema = percentual > limite_diferenca_pct
+
+    destaque = analisada.copy()
+    destaque[mascara > 0] = (0, 0, 255)
+    destino = Path(pasta_saida)
+    destino.mkdir(parents=True, exist_ok=True)
+    saidas = {
+        "diferenca.jpg": diferenca,
+        "diferencas_destacadas.jpg": destaque,
+        "mascara_diferenca.jpg": mascara,
+    }
+    for nome, imagem_saida in saidas.items():
+        sucesso, codificada = cv2.imencode(".jpg", imagem_saida)
+        if sucesso:
+            (destino / nome).write_bytes(codificada.tobytes())
+
+    analise_gabarito = analisar_imagem(caminho_gabarito, destino / "gabarito")
+    analise_candidata = analisar_imagem(caminho_analisado, destino / "analisada")
+
+    return {
+        "tem_problema": bool(tem_problema),
+        "resultado": "Possivel problema identificado" if tem_problema else "Sem problema aparente",
+        "percentual_diferenca": round(float(percentual), 2),
+        "limite_diferenca_pct": float(limite_diferenca_pct),
+        "quantidade_contornos_gabarito": analise_gabarito["quantidade_contornos"],
+        "quantidade_contornos_analisada": analise_candidata["quantidade_contornos"],
+        "pixels_hotspot_gabarito": analise_gabarito["pixels_hotspot"],
+        "pixels_hotspot_analisada": analise_candidata["pixels_hotspot"],
+        "aviso": (
+            "Resultado inicial por diferenca de pixels. Use imagens com mesmo "
+            "enquadramento e confirme a avaliacao com uma pessoa. A analise HSV "
+            "nao mede temperatura real."
+        ),
+    }
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
