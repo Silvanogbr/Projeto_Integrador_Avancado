@@ -3,3 +3,4 @@ __pycache__/
 .venv/
 venv/
 imagens/resultados_web/
+src/pipeline.py
