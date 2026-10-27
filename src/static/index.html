@@ -3,83 +3,176 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0d1728">
-  <title>AeroMotion | Painel de inspeção</title>
+  <meta name="theme-color" content="#101922">
+  <title>AeroMotion | Painel industrial</title>
   <style>
-    :root{font-family:Inter,Segoe UI,Arial,sans-serif;color:#e8eef8;background:#0b1220;font-synthesis:none;--panel:#111c2e;--line:#26364c;--muted:#9aabc2;--blue:#5aa7ff;--green:#55d6a1;--red:#ff7474}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 85% -10%,#1b3656 0,transparent 38%),#0b1220}
-    a{color:#8ec5ff}header{border-bottom:1px solid var(--line);background:#0b1220d9;position:sticky;top:0;z-index:2;backdrop-filter:blur(12px)}
-    .bar{max-width:1160px;margin:auto;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{display:flex;align-items:center;gap:12px;font-weight:750;letter-spacing:.2px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#5aa7ff,#2466c7);display:grid;place-items:center;font-size:20px}.sub{font-size:12px;color:var(--muted);font-weight:400;margin-top:3px}.links{display:flex;gap:16px;font-size:13px}
-    main{max-width:1160px;margin:auto;padding:32px 24px 60px}.intro{margin-bottom:24px}.eyebrow{color:#83bcff;text-transform:uppercase;letter-spacing:1.4px;font-size:11px;font-weight:700}h1{font-size:30px;margin:8px 0}h2{font-size:18px;margin:0 0 6px}.intro p,.hint{color:var(--muted);line-height:1.55;font-size:14px;margin:6px 0}.status{display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:9px 14px;font-size:13px;color:var(--muted);white-space:nowrap}.dot{width:9px;height:9px;border-radius:50%;background:#77869a}.dot.on{background:var(--green);box-shadow:0 0 12px #55d6a177}.dot.off{background:var(--red)}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:#111c2eeF;border:1px solid var(--line);border-radius:16px;padding:21px;box-shadow:0 12px 34px #0002}.cardhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:18px}.tag{font-size:11px;color:#a8cfff;background:#173153;border:1px solid #294e77;border-radius:99px;padding:5px 9px;white-space:nowrap}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-size:12px;color:#b7c5d8;margin-bottom:6px}.field input{width:100%;border:1px solid #30435d;background:#0b1423;color:#edf4ff;border-radius:8px;padding:10px 11px;font:inherit;font-size:14px;outline:none}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #5aa7ff20}.section-label{grid-column:1/-1;color:#86bfff;font-size:12px;font-weight:700;margin:5px 0 -3px}.actions{margin-top:17px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}button{border:0;border-radius:8px;background:#347fe0;color:white;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer}button:hover{background:#4b94f0}button:disabled{opacity:.55;cursor:wait}.result{margin-top:15px;border:1px solid var(--line);background:#0b1423;border-radius:10px;padding:14px;color:#dbe8f8;min-height:50px;line-height:1.5;font-size:14px}.result strong{color:#fff}.hidden{display:none!important}.upload{border:1px dashed #405675;border-radius:12px;padding:20px;text-align:center;background:#0c1626}.upload input{max-width:100%;color:var(--muted)}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.filetitle{display:block;text-align:left;font-size:13px;font-weight:700;margin-bottom:10px;color:#dbe8f8}.preview{max-width:100%;max-height:250px;border-radius:9px;margin-top:14px}.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.tile{background:#0b1423;border:1px solid var(--line);border-radius:10px;padding:9px}.tile img{width:100%;height:150px;object-fit:contain;background:#080d16;border-radius:6px}.tile span{display:block;color:var(--muted);font-size:12px;margin:7px 2px 0}.wide{grid-column:1/-1}.notice{font-size:12px;color:#d9bd76;margin-top:12px;line-height:1.5}.foot{color:#7789a1;font-size:12px;text-align:center;margin-top:24px}
-    @media(max-width:800px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}}@media(max-width:520px){.pair{grid-template-columns:1fr}.bar{padding:13px 16px}.links{gap:9px}main{padding:25px 15px 45px}h1{font-size:25px}.fields{grid-template-columns:1fr 1fr}.card{padding:16px}.status{font-size:11px;padding:8px 10px}}
+    :root{font-family:Inter,"Segoe UI",Arial,sans-serif;color:#eaf1f5;background:#101922;font-synthesis:none;--bg:#101922;--sidebar:#0c141c;--panel:#17232d;--panel-soft:#1b2a35;--line:#293a46;--muted:#91a4b0;--text:#eaf1f5;--teal:#57d6bd;--teal-dark:#123f3d;--blue:#75b8ff;--red:#ff7b79;--yellow:#f2c76e;--radius:16px}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text)}button,input{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+    .app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+    .sidebar{background:var(--sidebar);border-right:1px solid #26343e;padding:24px 16px;display:flex;flex-direction:column;gap:35px;min-height:100vh;position:sticky;top:0;height:100vh}
+    .brand{display:flex;align-items:center;gap:12px;padding:0 9px}.brand-mark{width:40px;height:40px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(145deg,#70e0ca,#238e83);color:#0d2929;font-weight:900;font-size:21px;box-shadow:0 8px 24px #39b7a633}.brand-name{font-size:16px;font-weight:800;letter-spacing:.2px}.brand-sub{font-size:11px;color:var(--muted);margin-top:3px}
+    .nav-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#657a86;padding:0 12px 9px;font-weight:800}.nav{display:grid;gap:6px}.nav-link{width:100%;display:flex;align-items:center;gap:12px;background:transparent;color:#91a4b0;border:1px solid transparent;padding:11px 12px;border-radius:10px;text-align:left;font-size:13px;transition:.18s}.nav-link:hover{background:#17232d;color:var(--text)}.nav-link.active{background:#173d3c;border-color:#245854;color:#8ce4d1}.nav-icon{width:22px;text-align:center;font-size:16px}.sidebar-bottom{margin-top:auto;background:#121e27;border:1px solid #263842;border-radius:12px;padding:13px}.side-status{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700}.side-note{font-size:11px;color:var(--muted);line-height:1.5;margin-top:9px}
+    .main{min-width:0}.topbar{height:76px;padding:0 clamp(18px,3vw,42px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #26343e;background:#101922e8;position:sticky;top:0;z-index:5;backdrop-filter:blur(14px)}.crumb{font-size:12px;color:var(--muted)}.crumb strong{color:#dce7eb;font-weight:650}.top-actions{display:flex;align-items:center;gap:10px}.status{display:flex;align-items:center;gap:9px;padding:9px 13px;border:1px solid var(--line);border-radius:99px;background:#17232d;color:#b3c1c7;font-size:12px;white-space:nowrap}.dot{width:8px;height:8px;border-radius:50%;background:#73828a}.dot.on{background:var(--teal);box-shadow:0 0 12px #57d6bd80}.dot.off{background:var(--red);box-shadow:0 0 10px #ff7b7970}.icon-link{width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:#17232d;color:#cbd8dd;display:grid;place-items:center;font-size:14px}.icon-link:hover{border-color:#52706f;color:var(--teal)}
+    .content{max-width:1440px;margin:0 auto;padding:34px clamp(18px,3vw,42px) 50px}.screen{display:none;animation:appear .24s ease}.screen.active{display:block}@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    .page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px}.eyebrow{font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:var(--teal);font-weight:800}.page-heading h1{font-size:27px;letter-spacing:-.5px;margin:7px 0 5px}.page-heading p{font-size:13px;line-height:1.55;color:var(--muted);margin:0;max-width:650px}.muted{color:var(--muted)}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(112deg,#153b3b 0%,#18313a 52%,#1a2834 100%);border:1px solid #2b5855;border-radius:20px;padding:34px 36px;min-height:244px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:18px}.hero:after{content:"";position:absolute;width:360px;height:360px;border:1px solid #7de4cc1f;border-radius:50%;right:7%;top:-170px;box-shadow:0 0 0 32px #7de4cc08,0 0 0 70px #7de4cc05;pointer-events:none}.hero-copy{position:relative;z-index:1;max-width:650px}.hero-kicker{color:#9ae9d6;font-size:10px;font-weight:800;letter-spacing:1.7px}.hero h1{font-size:32px;line-height:1.15;letter-spacing:-.8px;margin:11px 0}.hero p{color:#b8ccce;font-size:13px;line-height:1.65;max-width:565px;margin:0}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.hero-art{position:relative;z-index:1;width:124px;height:124px;flex:none;border-radius:50%;border:1px solid #72d9c577;background:radial-gradient(circle,#51bbaa28 0 35%,transparent 36%),repeating-radial-gradient(circle,transparent 0 18px,#70d8c326 19px 20px);display:grid;place-items:center;color:#90e9d7;font-size:38px}
+    .btn{border:1px solid transparent;border-radius:9px;padding:10px 14px;background:var(--teal);color:#092b2a;font-size:12px;font-weight:800;transition:.18s}.btn:hover{background:#79e7d2;transform:translateY(-1px)}.btn.secondary{background:#ffffff0b;color:#e2eeee;border-color:#ffffff29}.btn.secondary:hover{background:#ffffff17}.btn:disabled{opacity:.48;cursor:not-allowed;transform:none}
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:18px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:17px 18px}.stat-top{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px}.stat-icon{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;background:#1e393b;color:var(--teal);font-size:14px}.stat-value{font-size:20px;font-weight:750;letter-spacing:-.3px;margin-top:13px}.stat-foot{font-size:10px;color:#80939d;margin-top:4px}
+    .dash-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px}.panel-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:17px}.panel-title h2{font-size:14px;margin:0 0 5px}.panel-title p{font-size:11px;color:var(--muted);line-height:1.5;margin:0}.tag{font-size:10px;color:#9fe4d5;background:#173b39;border:1px solid #285653;border-radius:99px;padding:5px 9px;white-space:nowrap}.service-list{display:grid;gap:10px}.service-row{display:flex;align-items:center;gap:12px;padding:13px;background:#111c25;border:1px solid #283943;border-radius:11px}.service-symbol{width:34px;height:34px;flex:none;border-radius:10px;background:#213334;color:var(--teal);display:grid;place-items:center;font-size:15px}.service-info{min-width:0;flex:1}.service-info strong{display:block;font-size:12px}.service-info small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.service-pill{font-size:10px;padding:5px 8px;border-radius:99px;background:#27323a;color:#acb6ba}.service-pill.online{background:#163c34;color:#7fe0bd}.service-pill.offline{background:#462c30;color:#ffaaa1}
+    .quick-list{display:grid;gap:10px}.quick{display:flex;align-items:center;gap:12px;background:#111c25;border:1px solid #283943;border-radius:11px;padding:13px;cursor:pointer;transition:.18s}.quick:hover{border-color:#47716d;transform:translateY(-1px)}.quick-icon{width:35px;height:35px;display:grid;place-items:center;border-radius:10px;background:#1d3638;color:var(--teal);font-size:16px}.quick strong{font-size:12px;display:block}.quick small{font-size:10px;color:var(--muted);display:block;margin-top:4px}.arrow{margin-left:auto;color:#718891;font-size:17px}
+    .form-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(250px,.65fr);gap:16px;align-items:start}.fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}.section-label{grid-column:1/-1;color:#8cdaca;text-transform:uppercase;letter-spacing:1px;font-size:10px;font-weight:800;margin:4px 0 0}.field label{display:block;font-size:11px;color:#b9c7cd;margin-bottom:6px}.field input{width:100%;border:1px solid #354954;background:#101922;color:#edf6f8;border-radius:8px;padding:10px 11px;font-size:13px;outline:none}.field input:focus{border-color:#58b9aa;box-shadow:0 0 0 3px #57d6bd17}.field input:disabled{opacity:.48}.form-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:17px}.form-actions .hint{font-size:10px;color:var(--muted)}.result{margin-top:15px;border:1px solid #30434b;background:#101922;border-radius:10px;padding:14px;color:#dce8eb;min-height:53px;line-height:1.6;font-size:12px}.result strong{color:#fff}.side-info{display:grid;gap:12px}.info-box{border:1px solid #2c414b;background:#121d26;padding:14px;border-radius:11px}.info-box h3{font-size:11px;margin:0 0 7px}.info-box p{font-size:11px;color:var(--muted);line-height:1.55;margin:0}.class-list{display:grid;gap:8px}.class-item{display:flex;align-items:center;gap:9px;color:#bcc9ce;font-size:11px}.class-no{width:22px;height:22px;border-radius:7px;background:#213338;color:#8be0d0;display:grid;place-items:center;font-weight:800;font-size:10px}
+    .pair{display:grid;grid-template-columns:1fr 1fr;gap:13px}.upload{border:1px dashed #405761;border-radius:13px;padding:15px;background:#121e27;transition:.18s}.upload:hover{border-color:#58b9aa}.file-title{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:750;margin-bottom:11px}.step-no{width:23px;height:23px;border-radius:7px;background:#1d3b39;color:#8ce0ce;display:grid;place-items:center;font-size:10px}.upload input{max-width:100%;width:100%;color:#9db0b9;font-size:11px}.upload input::file-selector-button{border:1px solid #405660;background:#20303a;color:#deeaed;border-radius:7px;padding:7px 9px;margin-right:8px;cursor:pointer;font-size:10px}.upload-hint{font-size:10px;color:var(--muted);line-height:1.45;margin-top:8px}.preview{width:100%;height:190px;object-fit:contain;border-radius:9px;margin-top:13px;background:#0c141b;border:1px solid #263842}.vision-note{display:flex;gap:10px;align-items:flex-start;border:1px solid #4d4730;background:#29271e;border-radius:10px;padding:11px 13px;color:#d6c589;font-size:10px;line-height:1.55;margin-top:14px}.vision-note b{color:#f1dc97}.vision-result{margin-top:17px;background:#111b24;border:1px solid var(--line);border-radius:13px;padding:16px}.result-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.verdict{font-weight:850;font-size:13px;letter-spacing:.3px}.verdict.good{color:#76dfbb}.verdict.bad{color:#ff9690}.score{font-size:11px;color:#aab9c0}.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-top:14px}.tile{background:#101922;border:1px solid #2d3e48;border-radius:10px;padding:9px}.tile img{width:100%;height:155px;object-fit:contain;background:#0b1218;border-radius:7px}.tile span{display:block;color:#a8b8bf;font-size:10px;margin:8px 3px 2px}.notice{color:#b6c4c9;font-size:10px;line-height:1.5;margin-top:10px}.hidden{display:none!important}.screen-foot{color:#71858f;font-size:10px;margin:19px 0 0;text-align:center}
+    @media(max-width:1050px){.app{grid-template-columns:215px minmax(0,1fr)}.hero-art{width:95px;height:95px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.form-layout{grid-template-columns:1fr}.side-info{grid-template-columns:1fr 1fr}}
+    @media(max-width:760px){.app{display:block}.sidebar{position:relative;height:auto;min-height:0;padding:14px 15px 10px;border-right:0;border-bottom:1px solid #26343e;gap:14px}.brand{padding:0 4px}.sidebar .nav-label,.sidebar-bottom{display:none}.nav{display:flex;overflow-x:auto;gap:6px;padding-bottom:3px}.nav-link{width:auto;white-space:nowrap;padding:9px 11px;font-size:11px}.nav-icon{font-size:14px}.topbar{height:61px}.content{padding-top:24px}.hero{padding:25px}.hero-art{display:none}.dash-grid{grid-template-columns:1fr}}
+    @media(max-width:520px){.topbar{padding:0 14px}.content{padding:21px 14px 38px}.status{font-size:10px;padding:8px 10px}.status-text{max-width:138px;overflow:hidden;text-overflow:ellipsis}.icon-link{width:32px;height:32px}.page-heading h1{font-size:23px}.hero{padding:21px;border-radius:15px}.hero h1{font-size:26px}.stats{gap:9px}.stat{padding:13px}.stat-value{font-size:17px}.panel{padding:15px}.fields{grid-template-columns:1fr 1fr;gap:10px}.pair{grid-template-columns:1fr}.preview{height:205px}.tiles{grid-template-columns:1fr 1fr}.side-info{grid-template-columns:1fr}.page-heading{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
-<header><div class="bar"><div class="brand"><div class="logo">✦</div><div>AeroMotion<div class="sub">Painel de monitoramento industrial</div></div></div><nav class="links"><a id="apiDocs" href="#" target="_blank">Documentação da API de sensores</a><a id="healthLink" href="#" target="_blank">Health</a></nav></div></header>
-<main>
-  <section class="intro"><div class="eyebrow">AeroMotion Dynamics · bancada de testes</div><div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap"><div><h1>Inspeção e previsão</h1><p>Envie uma leitura de sensores ou compare uma peça com uma imagem gabarito aprovada.</p></div><div class="status"><i id="dot" class="dot"></i><span id="healthText">Conectando à API...</span></div></div></section>
-  <div class="grid">
-    <section class="card">
-      <div class="cardhead"><div><h2>Previsão dos sensores</h2><p class="hint">Informe os valores atuais e as estatísticas móveis da bancada.</p></div><span class="tag">POST /predict</span></div>
-      <form id="sensorForm"><div class="fields">
-        <div class="section-label">Leitura atual</div>
-        <div class="field"><label for="temperatura_mancal_c">Temperatura do mancal (°C)</label><input id="temperatura_mancal_c" name="temperatura_mancal_c" type="number" step="any" value="65" required></div>
-        <div class="field"><label for="vibracao_rms_mms">Vibração RMS (mm/s)</label><input id="vibracao_rms_mms" name="vibracao_rms_mms" type="number" step="any" value="2" required></div>
-        <div class="field"><label for="pressao_oleo_bar">Pressão do óleo (bar)</label><input id="pressao_oleo_bar" name="pressao_oleo_bar" type="number" step="any" value="4.3" required></div>
-        <div class="field"><label for="rotacao_rpm">Rotação (RPM)</label><input id="rotacao_rpm" name="rotacao_rpm" type="number" step="any" value="3000" required></div>
-        <div class="field"><label for="emissao_acustica_db">Emissão acústica (dB)</label><input id="emissao_acustica_db" name="emissao_acustica_db" type="number" step="any" value="55" required></div>
-        <div class="field"><label for="corrente_eletrica_amp">Corrente elétrica (A)</label><input id="corrente_eletrica_amp" name="corrente_eletrica_amp" type="number" step="any" value="30" required></div>
-        <div class="section-label">Médias e desvios móveis</div>
-        <div class="field"><label for="vibracao_media_1h">Vibração média · 1h</label><input id="vibracao_media_1h" name="vibracao_media_1h" type="number" step="any" value="2" required></div>
-        <div class="field"><label for="vibracao_desvio_1h">Vibração desvio · 1h</label><input id="vibracao_desvio_1h" name="vibracao_desvio_1h" type="number" step="any" value="0.2" required></div>
-        <div class="field"><label for="temperatura_media_1h">Temperatura média · 1h</label><input id="temperatura_media_1h" name="temperatura_media_1h" type="number" step="any" value="65" required></div>
-        <div class="field"><label for="temperatura_desvio_1h">Temperatura desvio · 1h</label><input id="temperatura_desvio_1h" name="temperatura_desvio_1h" type="number" step="any" value="1" required></div>
-        <div class="field"><label for="vibracao_media_6h">Vibração média · 6h</label><input id="vibracao_media_6h" name="vibracao_media_6h" type="number" step="any" value="2" required></div>
-        <div class="field"><label for="vibracao_desvio_6h">Vibração desvio · 6h</label><input id="vibracao_desvio_6h" name="vibracao_desvio_6h" type="number" step="any" value="0.2" required></div>
-        <div class="field"><label for="temperatura_media_6h">Temperatura média · 6h</label><input id="temperatura_media_6h" name="temperatura_media_6h" type="number" step="any" value="65" required></div>
-        <div class="field"><label for="temperatura_desvio_6h">Temperatura desvio · 6h</label><input id="temperatura_desvio_6h" name="temperatura_desvio_6h" type="number" step="any" value="1" required></div>
-      </div><div class="actions"><button id="predictButton" type="submit">Analisar leitura</button><span class="hint">Classe 0 a 3</span></div></form>
-      <div id="prediction" class="result" aria-live="polite">Preencha ou ajuste os valores e clique em analisar.</div>
-    </section>
-    <section class="card">
-      <div class="cardhead"><div><h2>Inspeção por imagem</h2><p class="hint">Canny, contornos e máscara de possíveis regiões quentes.</p></div><span class="tag">OpenCV</span></div>
-      <form id="visionForm"><div class="pair">
-        <div class="upload"><label class="filetitle" for="goldFile">Imagem gabarito · peça boa</label><input id="goldFile" type="file" accept="image/png,image/jpeg,image/webp" required><div class="hint">Use uma peça aprovada como referência.</div><img id="goldPreview" class="preview hidden" alt="Prévia da imagem gabarito"></div>
-        <div class="upload"><label class="filetitle" for="candidateFile">Imagem a analisar</label><input id="candidateFile" type="file" accept="image/png,image/jpeg,image/webp" required><div class="hint">Foto da peça que será comparada.</div><img id="candidatePreview" class="preview hidden" alt="Prévia da peça analisada"></div>
-      </div><div class="hint" style="margin-top:10px">JPG, PNG ou WEBP · máximo 10 MB por imagem · mantenha ângulo e enquadramento parecidos. Diferença acima de 8% indica possível problema.</div><div class="actions"><button id="visionButton" type="submit">Comparar imagens</button><span class="hint">POST /vision/compare</span></div></form>
-      <div id="visionResult" class="result" aria-live="polite">Selecione uma imagem da peça ou do componente.</div><div id="visionWarning" class="notice hidden"></div><div id="visionImages" class="tiles hidden"></div>
-    </section>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">A</div><div><div class="brand-name">AeroMotion</div><div class="brand-sub">Inteligência industrial</div></div></div>
+    <div><div class="nav-label">Workspace</div><nav class="nav" aria-label="Navegação principal">
+      <button class="nav-link active" type="button" data-screen="overview"><span class="nav-icon">⌂</span>Visão geral</button>
+      <button class="nav-link" type="button" data-screen="sensors"><span class="nav-icon">⌁</span>Previsão por sensores</button>
+      <button class="nav-link" type="button" data-screen="vision"><span class="nav-icon">▧</span>Inspeção visual</button>
+    </nav></div>
+    <div class="sidebar-bottom"><div class="side-status"><i id="sideDot" class="dot"></i><span id="sideStatusText">Verificando serviços</span></div><div class="side-note">O site e a visão computacional ficam disponíveis mesmo quando a API de sensores está desligada.</div></div>
+  </aside>
+  <div class="main">
+    <header class="topbar"><div class="crumb">AeroMotion <span style="color:#50636e">/</span> <strong id="breadcrumb">Visão geral</strong></div><div class="top-actions"><div class="status"><i id="dot" class="dot"></i><span id="healthText" class="status-text">Verificando API...</span></div><a id="apiDocs" class="icon-link" href="#" target="_blank" title="Documentação da API" aria-label="Documentação da API">↗</a></div></header>
+    <main class="content">
+      <section class="screen active" data-page="overview">
+        <div class="hero"><div class="hero-copy"><div class="hero-kicker">AEROMOTION DYNAMICS · MONITORAMENTO INDUSTRIAL</div><h1>Olá! Vamos acompanhar<br>suas bancadas?</h1><p>Analise leituras dos sensores e compare componentes com uma peça de referência. Escolha uma área para começar.</p><div class="hero-actions"><button class="btn" type="button" data-go="sensors">Abrir previsão <span aria-hidden="true">→</span></button><button class="btn secondary" type="button" data-go="vision">Inspecionar uma peça</button></div></div><div class="hero-art" aria-hidden="true">✳</div></div>
+        <div class="stats"><div class="stat"><div class="stat-top"><span>Módulos do sistema</span><span class="stat-icon">⌘</span></div><div class="stat-value">02</div><div class="stat-foot">Sensores e visão computacional</div></div><div class="stat"><div class="stat-top"><span>Classes de falha</span><span class="stat-icon">◈</span></div><div class="stat-value">04</div><div class="stat-foot">Normal + 3 tipos de falha</div></div><div class="stat"><div class="stat-top"><span>Comparação visual</span><span class="stat-icon">▧</span></div><div class="stat-value">8%</div><div class="stat-foot">Limite inicial de diferença</div></div><div class="stat"><div class="stat-top"><span>API de sensores</span><span class="stat-icon">⌁</span></div><div class="stat-value" id="overviewApiState" style="font-size:16px">Verificando</div><div class="stat-foot" id="overviewApiDetail">Checando conexão</div></div></div>
+        <div class="dash-grid"><section class="panel"><div class="panel-title"><div><h2>Serviços</h2><p>Estado das partes principais do sistema.</p></div><span class="tag">AO VIVO</span></div><div class="service-list"><div class="service-row"><div class="service-symbol">⌁</div><div class="service-info"><strong>API de sensores</strong><small>Previsão de falhas · porta 8001</small></div><span id="apiPill" class="service-pill">Verificando</span></div><div class="service-row"><div class="service-symbol">▧</div><div class="service-info"><strong>Site e visão computacional</strong><small>Inspeção de imagem · porta 8000</small></div><span class="service-pill online">Disponível</span></div></div></section>
+        <section class="panel"><div class="panel-title"><div><h2>Acesso rápido</h2><p>Vá direto para uma tarefa.</p></div></div><div class="quick-list"><button class="quick" type="button" data-go="sensors"><span class="quick-icon">⌁</span><span><strong>Prever falha</strong><small>Consultar o modelo com dados de sensores</small></span><span class="arrow">›</span></button><button class="quick" type="button" data-go="vision"><span class="quick-icon">▧</span><span><strong>Comparar imagens</strong><small>Usar gabarito e analisar possíveis diferenças</small></span><span class="arrow">›</span></button></div></section></div>
+        <p class="screen-foot">Ferramenta acadêmica de apoio. Confirme alertas com a equipe responsável.</p>
+      </section>
+
+      <section class="screen" data-page="sensors">
+        <div class="page-heading"><div><div class="eyebrow">Módulo 01 · modelo preditivo</div><h1>Previsão por sensores</h1><p>Informe as leituras atuais e os valores móveis da bancada para consultar a classe prevista.</p></div><span class="tag">POST /predict · porta 8001</span></div>
+        <div class="form-layout"><section class="panel"><div class="panel-title"><div><h2>Dados da leitura</h2><p>Os valores abaixo são exemplos e podem ser alterados.</p></div></div>
+          <form id="sensorForm"><div class="fields">
+            <div class="section-label">Leitura atual</div>
+            <div class="field"><label for="temperatura_mancal_c">Temperatura do mancal (°C)</label><input id="temperatura_mancal_c" name="temperatura_mancal_c" type="number" step="any" value="65" required></div>
+            <div class="field"><label for="vibracao_rms_mms">Vibração RMS (mm/s)</label><input id="vibracao_rms_mms" name="vibracao_rms_mms" type="number" step="any" value="2" required></div>
+            <div class="field"><label for="pressao_oleo_bar">Pressão do óleo (bar)</label><input id="pressao_oleo_bar" name="pressao_oleo_bar" type="number" step="any" value="4.3" required></div>
+            <div class="field"><label for="rotacao_rpm">Rotação (RPM)</label><input id="rotacao_rpm" name="rotacao_rpm" type="number" step="any" value="3000" required></div>
+            <div class="field"><label for="emissao_acustica_db">Emissão acústica (dB)</label><input id="emissao_acustica_db" name="emissao_acustica_db" type="number" step="any" value="55" required></div>
+            <div class="field"><label for="corrente_eletrica_amp">Corrente elétrica (A)</label><input id="corrente_eletrica_amp" name="corrente_eletrica_amp" type="number" step="any" value="30" required></div>
+            <div class="section-label">Médias e desvios móveis</div>
+            <div class="field"><label for="vibracao_media_1h">Vibração média · 1h</label><input id="vibracao_media_1h" name="vibracao_media_1h" type="number" step="any" value="2" required></div>
+            <div class="field"><label for="vibracao_desvio_1h">Vibração desvio · 1h</label><input id="vibracao_desvio_1h" name="vibracao_desvio_1h" type="number" step="any" value="0.2" required></div>
+            <div class="field"><label for="temperatura_media_1h">Temperatura média · 1h</label><input id="temperatura_media_1h" name="temperatura_media_1h" type="number" step="any" value="65" required></div>
+            <div class="field"><label for="temperatura_desvio_1h">Temperatura desvio · 1h</label><input id="temperatura_desvio_1h" name="temperatura_desvio_1h" type="number" step="any" value="1" required></div>
+            <div class="field"><label for="vibracao_media_6h">Vibração média · 6h</label><input id="vibracao_media_6h" name="vibracao_media_6h" type="number" step="any" value="2" required></div>
+            <div class="field"><label for="vibracao_desvio_6h">Vibração desvio · 6h</label><input id="vibracao_desvio_6h" name="vibracao_desvio_6h" type="number" step="any" value="0.2" required></div>
+            <div class="field"><label for="temperatura_media_6h">Temperatura média · 6h</label><input id="temperatura_media_6h" name="temperatura_media_6h" type="number" step="any" value="65" required></div>
+            <div class="field"><label for="temperatura_desvio_6h">Temperatura desvio · 6h</label><input id="temperatura_desvio_6h" name="temperatura_desvio_6h" type="number" step="any" value="1" required></div>
+          </div><div class="form-actions"><button id="predictButton" class="btn" type="submit">Analisar leitura <span aria-hidden="true">→</span></button><span class="hint">A previsão depende da API de sensores estar ligada.</span></div></form>
+        </section><aside class="side-info"><div class="info-box"><h3>Como interpretar</h3><p>O modelo retorna uma classe entre 0 e 3. O resultado é uma indicação para apoiar a inspeção, não substitui avaliação técnica.</p></div><div class="info-box"><h3>Classes do modelo</h3><div class="class-list"><div class="class-item"><span class="class-no">0</span>Normal</div><div class="class-item"><span class="class-no">1</span>Desgaste de rolamento</div><div class="class-item"><span class="class-no">2</span>Desbalanceamento do rotor</div><div class="class-item"><span class="class-no">3</span>Cavitação / superaquecimento</div></div></div><div id="prediction" class="result">Preencha os valores e clique em analisar.</div></aside></div>
+      </section>
+
+      <section class="screen" data-page="vision">
+        <div class="page-heading"><div><div class="eyebrow">Módulo 02 · OpenCV</div><h1>Inspeção visual</h1><p>Compare uma peça com o gabarito aprovado e veja as regiões que apresentam diferença visual.</p></div><span class="tag">POST /vision/compare · porta 8000</span></div>
+        <section class="panel"><div class="panel-title"><div><h2>Selecione as imagens</h2><p>Envie as duas imagens para fazer uma comparação lado a lado.</p></div></div>
+          <form id="visionForm"><div class="pair">
+            <div class="upload"><label class="file-title" for="goldFile"><span class="step-no">01</span>Imagem gabarito · peça boa</label><input id="goldFile" type="file" accept="image/png,image/jpeg,image/webp" required><div class="upload-hint">Escolha uma peça aprovada como referência.</div><img id="goldPreview" class="preview hidden" alt="Prévia da imagem gabarito"></div>
+            <div class="upload"><label class="file-title" for="candidateFile"><span class="step-no">02</span>Imagem da peça a analisar</label><input id="candidateFile" type="file" accept="image/png,image/jpeg,image/webp" required><div class="upload-hint">Selecione a peça que deseja verificar.</div><img id="candidatePreview" class="preview hidden" alt="Prévia da peça a analisar"></div>
+          </div><div class="vision-note"><span>ⓘ</span><span><b>Para uma comparação melhor:</b> use fotos com ângulo, distância e enquadramento parecidos. Arquivos JPG, PNG ou WEBP de até 10 MB. Diferença acima de 8% é indicada como possível problema.</span></div><div class="form-actions"><button id="visionButton" class="btn" type="submit">Comparar imagens <span aria-hidden="true">→</span></button><span class="hint">A visão computacional continua disponível mesmo com a API de sensores desligada.</span></div></form>
+          <div id="visionResult" class="vision-result hidden" aria-live="polite"></div><div id="visionWarning" class="notice hidden"></div><div id="visionImages" class="tiles hidden"></div>
+        </section><p class="screen-foot">O limite de 8% é uma regra inicial por comparação de pixels. Confirme o resultado visualmente; hotspots por cor não medem temperatura real.</p>
+      </section>
+    </main>
   </div>
-  <p class="foot">As marcações visuais dependem da imagem enviada. Hotspots por cor não representam medição real de temperatura.</p>
-</main>
+</div>
 <script>
 const SENSOR_API_BASE = `${window.location.protocol}//${window.location.hostname}:8001`;
 document.getElementById('apiDocs').href = `${SENSOR_API_BASE}/docs`;
-document.getElementById('healthLink').href = `${SENSOR_API_BASE}/health`;
 const healthText = document.getElementById('healthText');
-const dot = document.getElementById('dot');
+const topDot = document.getElementById('dot');
+const sideDot = document.getElementById('sideDot');
 const sensorForm = document.getElementById('sensorForm');
 const prediction = document.getElementById('prediction');
 const classes = {0:'Normal',1:'Desgaste de rolamento',2:'Desbalanceamento do rotor',3:'Cavitação / superaquecimento'};
-function setSensorAPI(online, version='') {
-  healthText.textContent = online ? `API de sensores ligada · modelo ${version}` : 'API de sensores desligada';
-  dot.className = online ? 'dot on' : 'dot off';
-  sensorForm.querySelectorAll('input,button').forEach(control => control.disabled = !online);
-  if (!online) prediction.textContent = 'Previsão de sensores indisponível enquanto a API estiver desligada. A inspeção visual continua funcionando.';
+
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(screen=>screen.classList.toggle('active',screen.dataset.page===name));
+  document.querySelectorAll('.nav-link').forEach(link=>link.classList.toggle('active',link.dataset.screen===name));
+  const names={overview:'Visão geral',sensors:'Previsão por sensores',vision:'Inspeção visual'};
+  document.getElementById('breadcrumb').textContent=names[name]||names.overview;
+  history.replaceState(null,'',`#${name}`);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-screen]').forEach(link=>link.addEventListener('click',()=>showScreen(link.dataset.screen)));
+document.querySelectorAll('[data-go]').forEach(button=>button.addEventListener('click',()=>showScreen(button.dataset.go)));
+const firstScreen=location.hash.slice(1);
+if(['overview','sensors','vision'].includes(firstScreen))showScreen(firstScreen);
+
+function setSensorAPI(online,version=''){
+  const label=online?`API ligada · v${version}`:'API de sensores desligada';
+  healthText.textContent=label;
+  topDot.className=online?'dot on':'dot off';
+  sideDot.className=online?'dot on':'dot off';
+  document.getElementById('sideStatusText').textContent=online?'Sensores conectados':'API de sensores desligada';
+  document.getElementById('overviewApiState').textContent=online?'Ligada':'Desligada';
+  document.getElementById('overviewApiDetail').textContent=online?`Modelo versão ${version}`:'Visão computacional continua disponível';
+  const pill=document.getElementById('apiPill');
+  pill.textContent=online?'Conectada':'Desligada';
+  pill.className=online?'service-pill online':'service-pill offline';
+  sensorForm.querySelectorAll('input,button').forEach(control=>control.disabled=!online);
+  if(!online)prediction.textContent='Previsão de sensores indisponível enquanto a API estiver desligada. A inspeção visual continua funcionando.';
 }
 async function checkHealth(){
-  try {const r=await fetch(`${SENSOR_API_BASE}/health`,{cache:'no-store'});if(!r.ok)throw new Error();const d=await r.json();setSensorAPI(true,d.versao_modelo)}
-  catch {setSensorAPI(false)}
+  try{const response=await fetch(`${SENSOR_API_BASE}/health`,{cache:'no-store'});if(!response.ok)throw new Error();const data=await response.json();setSensorAPI(true,data.versao_modelo)}
+  catch{setSensorAPI(false)}
 }
 checkHealth();
 setInterval(checkHealth,5000);
-sensorForm.addEventListener('submit',async e=>{e.preventDefault();const b=document.getElementById('predictButton'),out=document.getElementById('prediction');b.disabled=true;out.textContent='Consultando o modelo...';const data=Object.fromEntries(new FormData(sensorForm).entries());for(const k in data)data[k]=Number(data[k]);try{const r=await fetch(`${SENSOR_API_BASE}/predict`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const d=await r.json();if(!r.ok)throw new Error(d.detail||'Não foi possível fazer a previsão.');const c=d.classe_prevista;out.innerHTML=`<strong>Classe prevista: ${c} · ${classes[c]||'Classe desconhecida'}</strong><br><span class="hint">Previsão gerada pelo modelo de classificação.</span>`}catch(err){out.textContent=`Erro: ${err.message}. Confira se a API de sensores está ligada.`;checkHealth()}finally{b.disabled=false}});
-const goldInput=document.getElementById('goldFile'),candidateInput=document.getElementById('candidateFile');
-function previewFile(input,target){const f=input.files[0];if(f){target.src=URL.createObjectURL(f);target.classList.remove('hidden')}}
+
+sensorForm.addEventListener('submit',async event=>{
+  event.preventDefault();
+  const button=document.getElementById('predictButton');
+  button.disabled=true;prediction.textContent='Consultando o modelo...';
+  const data=Object.fromEntries(new FormData(sensorForm).entries());
+  for(const key in data)data[key]=Number(data[key]);
+  try{
+    const response=await fetch(`${SENSOR_API_BASE}/predict`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const result=await response.json();
+    if(!response.ok)throw new Error(result.detail||'Não foi possível fazer a previsão.');
+    const code=result.classe_prevista;
+    prediction.innerHTML=`<strong>Classe prevista: ${code} · ${classes[code]||'Classe desconhecida'}</strong><br><span class="muted">Previsão gerada pelo modelo de classificação.</span>`;
+  }catch(error){prediction.textContent=`Erro: ${error.message}. Confira se a API de sensores está ligada.`;checkHealth()}
+  finally{button.disabled=false}
+});
+
+const goldInput=document.getElementById('goldFile');
+const candidateInput=document.getElementById('candidateFile');
+function previewFile(input,target){const file=input.files[0];if(file){target.src=URL.createObjectURL(file);target.classList.remove('hidden')}}
 goldInput.addEventListener('change',()=>previewFile(goldInput,document.getElementById('goldPreview')));
 candidateInput.addEventListener('change',()=>previewFile(candidateInput,document.getElementById('candidatePreview')));
-document.getElementById('visionForm').addEventListener('submit',async e=>{e.preventDefault();const good=goldInput.files[0],candidate=candidateInput.files[0];if(!good||!candidate)return;const b=document.getElementById('visionButton'),out=document.getElementById('visionResult'),tiles=document.getElementById('visionImages'),warning=document.getElementById('visionWarning');b.disabled=true;out.textContent='Comparando as imagens...';tiles.classList.add('hidden');warning.classList.add('hidden');const data=new FormData();data.append('gabarito',good);data.append('imagem',candidate);try{const r=await fetch('/vision/compare',{method:'POST',body:data});const d=await r.json();if(!r.ok)throw new Error(d.detail||'Falha na comparação.');const risco=d.tem_problema;out.innerHTML=`<strong style="color:${risco?'#ff8585':'#65deb0'}">${risco?'POSSÍVEL PROBLEMA IDENTIFICADO':'SEM PROBLEMA APARENTE'}</strong><br>Diferença visual: <strong>${Number(d.percentual_diferenca).toLocaleString('pt-BR')}%</strong> · limite inicial: ${Number(d.limite_diferenca_pct).toLocaleString('pt-BR')}%`;warning.textContent=d.aviso;warning.classList.remove('hidden');const labels={diferencas_destacadas:'Diferenças em vermelho',mascara_diferenca:'Mapa das diferenças',contornos_gabarito:'Contornos do gabarito',contornos_analisada:'Contornos da peça analisada',hotspots_analisada:'Possíveis hotspots na peça'};tiles.innerHTML=Object.entries(d.imagens).map(([name,url])=>`<div class="tile"><img src="${url}" alt="${labels[name]}"><span>${labels[name]}</span></div>`).join('');tiles.classList.remove('hidden')}catch(err){out.textContent=`Erro: ${err.message}`}finally{b.disabled=false}});
+document.getElementById('visionForm').addEventListener('submit',async event=>{
+  event.preventDefault();
+  const good=goldInput.files[0],candidate=candidateInput.files[0];if(!good||!candidate)return;
+  const button=document.getElementById('visionButton');
+  const resultBox=document.getElementById('visionResult');
+  const tiles=document.getElementById('visionImages');
+  const warning=document.getElementById('visionWarning');
+  button.disabled=true;button.textContent='Comparando...';resultBox.classList.remove('hidden');resultBox.textContent='Analisando as imagens...';tiles.classList.add('hidden');warning.classList.add('hidden');
+  const formData=new FormData();formData.append('gabarito',good);formData.append('imagem',candidate);
+  try{
+    const response=await fetch('/vision/compare',{method:'POST',body:formData});
+    const data=await response.json();
+    if(!response.ok)throw new Error(data.detail||'Falha na comparação.');
+    const problem=data.tem_problema;
+    resultBox.innerHTML=`<div class="result-heading"><span class="verdict ${problem?'bad':'good'}">${problem?'⚠ POSSÍVEL PROBLEMA IDENTIFICADO':'✓ SEM PROBLEMA APARENTE'}</span><span class="score">Diferença visual <strong>${Number(data.percentual_diferenca).toLocaleString('pt-BR')}%</strong> · limite ${Number(data.limite_diferenca_pct).toLocaleString('pt-BR')}%</span></div>`;
+    warning.textContent=data.aviso;warning.classList.remove('hidden');
+    const labels={diferencas_destacadas:'Diferenças destacadas',mascara_diferenca:'Mapa das diferenças',contornos_gabarito:'Contornos do gabarito',contornos_analisada:'Contornos da peça analisada',hotspots_analisada:'Possíveis hotspots'};
+    tiles.innerHTML=Object.entries(data.imagens).map(([name,url])=>`<div class="tile"><img src="${url}" alt="${labels[name]}"><span>${labels[name]}</span></div>`).join('');
+    tiles.classList.remove('hidden');
+  }catch(error){resultBox.textContent=`Erro: ${error.message}`}
+  finally{button.disabled=false;button.innerHTML='Comparar imagens <span aria-hidden="true">→</span>'}
+});
 </script>
 </body>
 </html>
